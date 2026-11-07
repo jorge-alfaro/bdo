@@ -4,6 +4,9 @@ dist/
 
 .atl/
 
+# local-only source (never commit)
+example/
+
 # impeccable (design skill) — ephemeral output & runtime state
 # Shared artifacts stay tracked: config.json, live/config.json,
 # design.json, surfaces/*.md, critique/*.md.
