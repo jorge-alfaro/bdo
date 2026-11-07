@@ -1,0 +1,177 @@
+---
+import '../styles/global.css';
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Black Desert · Panel personal</title>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="logo"><b>Black Desert</b><span>ONLINE</span></div>
+    <div class="card clock">
+      <div class="time" id="time">--:--:--</div>
+      <div class="date" id="date"></div>
+      <div class="resets"><div>Reset Diario<b>6:00 PM</b></div><div>Reset Semanal<b>Mié · 6:00 PM</b></div></div>
+      <div class="today" id="weeklyTimer"></div>
+    </div>
+  </div>
+
+  <!-- NEXT BOSS (lo más importante) -->
+  <div class="card next">
+    <div class="nb">
+      <div><h3>Next Boss</h3><div class="faces" id="nFaces"></div><div class="cd" id="nCd">--:--:--</div><div class="nm" id="nName"></div><div class="at" id="nAt"></div></div>
+      <div><h3>Followed By</h3><div class="faces" id="fFaces"></div><div class="cd f" id="fCd">--:--:--</div><div class="nm" id="fName"></div><div class="at" id="fAt"></div></div>
+    </div>
+  </div>
+
+  <!-- JEFES MUNDIALES -->
+  <div class="card">
+    <h2>👹 Jefes Mundiales</h2>
+    <div class="sub">Recompensas limitadas por semana · toca para marcar</div>
+    <div class="bosses" id="bosses"></div>
+    <div style="text-align:right;margin-top:8px"><button class="rst" id="rstB">Reiniciar semana</button></div>
+
+    <h2 style="margin-top:18px">Horarios personalizados para tu región</h2>
+    <div class="sc"><table>
+      <thead><tr><th>Hora</th><th>Jefe</th><th>Días</th><th></th></tr></thead>
+      <tbody id="sched"></tbody>
+    </table></div>
+  </div>
+
+  <div class="two">
+    <div class="card">
+      <h2>🐴 Semanal</h2>
+      <div class="sub">Tu checklist de la semana</div>
+      <div id="weeklies"></div>
+      <div class="addw">
+        <input id="wi" placeholder="Título...">
+        <input id="wid" placeholder="Descripción...">
+        <button id="wa">+ Agregar</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>📅 Pendientes</h2>
+      <div class="sub">Notas rápidas</div>
+      <div id="todos"></div>
+      <div class="add"><input id="ti" placeholder="Agregar nota..."><button id="ta">+</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== EDITA AQUÍ tus horarios (hora local, d = días 0=Dom..6=Sáb) =====
+const SCHEDULE=[
+ {t:"11:00",boss:"Laulau",img:"/assets/laulau.webp",d:[0,1,2,3,4,5,6],txt:"Todos los días",tag:"Diario"},
+ {t:"14:00",boss:"Garmoth",img:"/assets/garmoth.webp",d:[0,1,2,3,4,5,6],txt:"Todos los días",tag:"Diario"},
+ {t:"16:00",boss:"Vell",img:"/assets/vell.webp",d:[0],txt:"Domingo",tag:"Semanal"},
+ {t:"19:00",boss:"Vell",img:"/assets/vell.webp",d:[3],txt:"Miércoles",tag:"Semanal"},
+ {t:"23:15",boss:"Garmoth",img:"/assets/garmoth.webp",d:[0,1,2,3,4,5],txt:"Todos excepto sábado",tag:"Diario"}
+];
+const BOSSES=[{n:"Garmoth",img:"/assets/garmoth.webp",max:3,r:"Escamas de Garmoth"},{n:"Laulau",img:"/assets/laulau.webp",max:1,r:"Botín semanal"},{n:"Vell",img:"/assets/vell.webp",max:1,r:"Corazón de Vell"}];
+// ======================================================================
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,"0");
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+
+function occ(){ // próximas ocurrencias
+  const now=new Date(),out=[];
+  for(let i=0;i<9;i++){
+    const day=new Date(now.getFullYear(),now.getMonth(),now.getDate()+i);
+    SCHEDULE.forEach(s=>{
+      if(!s.d.includes(day.getDay()))return;
+      const [h,m]=s.t.split(":").map(Number);
+      const at=new Date(day.getFullYear(),day.getMonth(),day.getDate(),h,m,0);
+      if(at>now)out.push({at,s});
+    });
+  }
+  return out.sort((a,b)=>a.at-b.at);
+}
+function group(list,start){ // agrupa jefes a la misma hora
+  const first=list[start];if(!first)return null;
+  const g=list.filter(o=>+o.at===+first.at);
+  return {at:first.at,items:g,end:start+g.length};
+}
+const fmt=ms=>{const s=Math.max(0,Math.floor(ms/1000));return pad(Math.floor(s/3600))+":"+pad(Math.floor(s%3600/60))+":"+pad(s%60)};
+const hm=d=>pad(d.getHours())+":"+pad(d.getMinutes());
+function weeklyTimer(){ // cuenta regresiva al reset semanal (Mié 6:00 PM)
+  const now=new Date();
+  const day=now.getDay(); // 3 = Miércoles
+  let daysUntil=(3-day+7)%7;
+  let reset=new Date(now.getFullYear(),now.getMonth(),now.getDate()+daysUntil,18,0,0);
+  if(daysUntil===0 && now>=reset){ // ya pasó el reset de hoy -> próximo miércoles
+    reset=new Date(now.getFullYear(),now.getMonth(),now.getDate()+7,18,0,0);
+    daysUntil=7;
+  }
+  const ms=reset-now;
+  const totalHours=Math.floor(ms/3600000);
+  const d=Math.floor(totalHours/24);
+  const h=totalHours%24;
+  return daysUntil===0 ? `[HOY] ${h}hrs` : `${d}D ${h}hrs`;
+}
+function paint(g,f,cd,nm,at){
+  if(!g)return;
+  $(f).innerHTML=g.items.map(o=>`<div class="face" title="${o.s.boss}"><img src="${o.s.img}" alt="${o.s.boss}"></div>`).join("");
+  $(nm).textContent=g.items.map(o=>o.s.boss).join(" | ");
+  $(at).textContent="a las "+hm(g.at);
+}
+let curKey="";
+function tick(){
+  const now=new Date();
+  $("time").textContent=pad(now.getHours())+":"+pad(now.getMinutes())+":"+pad(now.getSeconds());
+  let d=now.toLocaleDateString("es-MX",{weekday:"short",day:"numeric",month:"long",year:"numeric"});
+  $("date").textContent=d.charAt(0).toUpperCase()+d.slice(1);
+  $("weeklyTimer").textContent=weeklyTimer();
+  const l=occ(),g1=group(l,0),g2=g1?group(l,g1.end):null;
+  if(g1){$("nCd").textContent=fmt(g1.at-now);const k=+g1.at+"|"+(g2?+g2.at:0);if(k!==curKey){curKey=k;paint(g1,"nFaces","nCd","nName","nAt");paint(g2,"fFaces","fCd","fName","fAt");renderSched(g1.at)}}
+  if(g2)$("fCd").textContent=fmt(g2.at-now);
+}
+function renderSched(nextAt){
+  $("sched").innerHTML=SCHEDULE.map(s=>{
+    const nx=nextAt&&hm(nextAt)===s.t&&s.d.includes(nextAt.getDay());
+    return `<tr class="${nx?"nx":""}"><td>${s.t}</td><td><img class="mini" src="${s.img}" alt="${s.boss}"> ${s.boss}</td><td>${s.txt}</td><td><span class="tag ${s.tag==="Diario"?"d":"s"}">${s.tag}</span></td></tr>`}).join("");
+}
+// Contadores de jefes
+let cnt=store.get("bdo_cnt",{});
+function renderB(){
+  $("bosses").innerHTML=BOSSES.map(b=>{const c=cnt[b.n]||0,done=c>=b.max;
+    return `<div class="b ${done?"done":""}" data-n="${b.n}"><div class="em"><img src="${b.img}" alt="${b.n}"></div><b>${b.n}</b><div class="c">${done?"✔ ":"○ "}${c} / ${b.max}</div><small>${b.r}</small></div>`}).join("");
+  document.querySelectorAll(".b").forEach(e=>e.onclick=()=>{const b=BOSSES.find(x=>x.n===e.dataset.n);cnt[b.n]=(cnt[b.n]||0)>=b.max?0:(cnt[b.n]||0)+1;store.set("bdo_cnt",cnt);renderB()});
+}
+$("rstB").onclick=()=>{cnt={};store.set("bdo_cnt",cnt);renderB();weeklies=weeklies.map(w=>({...w,done:false}));store.set("bdo_weekly",weeklies);renderW()};
+// Semanal (checklist) — las tareas persisten, solo se desmarca el check al resetear
+let weeklies=(store.get("bdo_weekly",[])||[]).map(w=>typeof w==="string"?{t:w,done:false,desc:""}:{t:w.t,done:!!w.done,desc:w.desc||""});
+function renderW(){
+  $("weeklies").innerHTML=weeklies.map((w,i)=>`<div class="wi"><label class="chk"><input type="checkbox" data-i="${i}" ${w.done?"checked":""}><div><b></b><small></small></div></label><button data-i="${i}">✕</button></div>`).join("");
+  document.querySelectorAll("#weeklies .wi").forEach((el,i)=>{
+    el.querySelector("b").textContent=weeklies[i].t;
+    el.querySelector("small").textContent=weeklies[i].desc;
+    el.querySelector("input").onchange=e=>{weeklies[i].done=e.target.checked;store.set("bdo_weekly",weeklies)};
+    el.querySelector("button").onclick=()=>{weeklies.splice(i,1);store.set("bdo_weekly",weeklies);renderW()};
+  });
+}
+function addW(){
+  const t=$("wi").value.trim();if(!t)return;
+  const d=$("wid").value.trim();
+  weeklies.push({t,done:false,desc:d});
+  $("wi").value="";$("wid").value="";
+  store.set("bdo_weekly",weeklies);renderW();
+}
+$("wa").onclick=addW;$("wi").onkeydown=e=>{if(e.key==="Enter")addW()};$("wid").onkeydown=e=>{if(e.key==="Enter")addW()};
+// Pendientes
+let todos=store.get("bdo_todos",[]);
+function renderT(){
+  $("todos").innerHTML=todos.map((t,i)=>`<div class="pi"><span></span><button data-i="${i}">✕</button></div>`).join("");
+  document.querySelectorAll("#todos .pi").forEach((el,i)=>{el.firstChild.textContent=todos[i];el.lastChild.onclick=()=>{todos.splice(i,1);store.set("bdo_todos",todos);renderT()}});
+}
+function addT(){const v=$("ti").value.trim();if(!v)return;todos.push(v);$("ti").value="";store.set("bdo_todos",todos);renderT()}
+$("ta").onclick=addT;$("ti").onkeydown=e=>{if(e.key==="Enter")addT()};
+renderB();renderT();renderW();renderSched();tick();setInterval(tick,1000);
+</script>
+</body>
+</html>
