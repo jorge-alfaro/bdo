@@ -116,7 +116,7 @@ function group(list,start){ // agrupa jefes a la misma hora
   return {at:first.at,items:g,end:start+g.length};
 }
 const fmt=ms=>{const s=Math.max(0,Math.floor(ms/1000));return pad(Math.floor(s/3600))+":"+pad(Math.floor(s%3600/60))+":"+pad(s%60)};
-const fmtShort=ms=>{const s=Math.max(0,Math.floor(ms/1000));return pad(Math.floor(s/3600))+":"+pad(Math.floor(s%3600/60))};
+const fmtShort=ms=>{const s=Math.max(0,Math.floor(ms/1000));const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return `${h}h ${pad(m)}m`};
 const hm=d=>pad(d.getHours())+":"+pad(d.getMinutes());
 function weeklyTimer(){ // cuenta regresiva al reset semanal (Mié 6:00 PM)
   const now=new Date();
