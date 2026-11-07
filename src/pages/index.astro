@@ -26,39 +26,12 @@ import '../styles/global.css';
     </div>
   </div>
 
-  <!-- NEXT BOSS · la brújula -->
+  <!-- NEXT BOSS · el retrato -->
   <div class="compass-card">
     <div class="heading">Derrotero · próximo jefe</div>
     <div class="nb">
-      <div class="rose">
-        <svg width="120" height="120" viewBox="0 0 120 120" aria-hidden="true">
-          <circle cx="60" cy="60" r="56" fill="none" stroke="var(--line)" stroke-width="1"/>
-          <circle cx="60" cy="60" r="44" fill="none" stroke="var(--line)" stroke-width="1"/>
-          <!-- cardinal + intercardinal ticks -->
-          <g stroke="var(--line)" stroke-width="1">
-            <line x1="60" y1="6"  x2="60" y2="14"/>
-            <line x1="60" y1="106" x2="60" y2="114"/>
-            <line x1="6"  y1="60" x2="14" y2="60"/>
-            <line x1="106" y1="60" x2="114" y2="60"/>
-            <line x1="22" y1="22" x2="27" y2="27"/>
-            <line x1="98" y1="22" x2="93" y2="27"/>
-            <line x1="22" y1="98" x2="27" y2="93"/>
-            <line x1="98" y1="98" x2="93" y2="93"/>
-          </g>
-          <!-- cardinal labels -->
-          <g fill="var(--txt-dim)" font-family="Barlow,monospace" font-size="9" letter-spacing="1">
-            <text x="60" y="26" text-anchor="middle">N</text>
-            <text x="60" y="104" text-anchor="middle">S</text>
-            <text x="94" y="63" text-anchor="middle">E</text>
-            <text x="26" y="63" text-anchor="middle">O</text>
-          </g>
-          <!-- needle (rotates to point at next boss) -->
-          <g class="needle" id="needle">
-            <path d="M60 16 L65 60 L60 64 L55 60 Z" fill="var(--brass-bright)"/>
-            <path d="M60 104 L65 60 L60 64 L55 60 Z" fill="var(--vermilion)"/>
-            <circle cx="60" cy="60" r="4" fill="var(--brass-bright)"/>
-          </g>
-        </svg>
+      <div class="portrait">
+        <img id="nImg" src="/assets/garmoth.webp" alt="Próximo jefe">
       </div>
       <div class="slot">
         <div class="lbl">Next Boss</div>
@@ -112,11 +85,11 @@ import '../styles/global.css';
 <script>
 // ===== EDITA AQUÍ tus horarios (hora local, d = días 0=Dom..6=Sáb) =====
 const SCHEDULE=[
- {t:"11:00",boss:"Laulau",img:"/assets/laulau.webp",br:90,d:[0,1,2,3,4,5,6],txt:"Todos los días",tag:"Diario"},
- {t:"14:00",boss:"Garmoth",img:"/assets/garmoth.webp",br:0,d:[0,1,2,3,4,5,6],txt:"Todos los días",tag:"Diario"},
- {t:"16:00",boss:"Vell",img:"/assets/vell.webp",br:270,d:[0],txt:"Domingo",tag:"Semanal"},
- {t:"19:00",boss:"Vell",img:"/assets/vell.webp",br:270,d:[3],txt:"Miércoles",tag:"Semanal"},
- {t:"23:15",boss:"Garmoth",img:"/assets/garmoth.webp",br:0,d:[0,1,2,3,4,5],txt:"Todos excepto sábado",tag:"Diario"}
+ {t:"11:00",boss:"Laulau",img:"/assets/laulau.webp",d:[0,1,2,3,4,5,6],txt:"Todos los días",tag:"Diario"},
+ {t:"14:00",boss:"Garmoth",img:"/assets/garmoth.webp",d:[0,1,2,3,4,5,6],txt:"Todos los días",tag:"Diario"},
+ {t:"16:00",boss:"Vell",img:"/assets/vell.webp",d:[0],txt:"Domingo",tag:"Semanal"},
+ {t:"19:00",boss:"Vell",img:"/assets/vell.webp",d:[3],txt:"Miércoles",tag:"Semanal"},
+ {t:"23:15",boss:"Garmoth",img:"/assets/garmoth.webp",d:[0,1,2,3,4,5],txt:"Todos excepto sábado",tag:"Diario"}
 ];
 const BOSSES=[{n:"Garmoth",img:"/assets/garmoth.webp",max:3,r:"Escamas de Garmoth"},{n:"Laulau",img:"/assets/laulau.webp",max:1,r:"Botín semanal"},{n:"Vell",img:"/assets/vell.webp",max:1,r:"Corazón de Vell"}];
 // ======================================================================
@@ -143,6 +116,7 @@ function group(list,start){ // agrupa jefes a la misma hora
   return {at:first.at,items:g,end:start+g.length};
 }
 const fmt=ms=>{const s=Math.max(0,Math.floor(ms/1000));return pad(Math.floor(s/3600))+":"+pad(Math.floor(s%3600/60))+":"+pad(s%60)};
+const fmtShort=ms=>{const s=Math.max(0,Math.floor(ms/1000));return pad(Math.floor(s/3600))+":"+pad(Math.floor(s%3600/60))};
 const hm=d=>pad(d.getHours())+":"+pad(d.getMinutes());
 function weeklyTimer(){ // cuenta regresiva al reset semanal (Mié 6:00 PM)
   const now=new Date();
@@ -159,12 +133,11 @@ function weeklyTimer(){ // cuenta regresiva al reset semanal (Mié 6:00 PM)
   const h=totalHours%24;
   return daysUntil===0 ? `[HOY] ${h}hrs` : `${d}D ${h}hrs`;
 }
-function pointNeedle(deg){$("needle").style.transform=`rotate(${deg}deg)`}
 function paint(g,slotName,slotCd,slotAt,next){
   if(!g)return;
   $(slotName).textContent=g.items.map(o=>o.s.boss).join(" | ");
   $(slotAt).textContent="a las "+hm(g.at);
-  if(next)pointNeedle(g.items[0].s.br);
+  if(next)$("nImg").src=g.items[0].s.img;
 }
 let curKey="";
 function tick(){
@@ -175,7 +148,7 @@ function tick(){
   $("weeklyTimer").textContent=weeklyTimer();
   const l=occ(),g1=group(l,0),g2=g1?group(l,g1.end):null;
   if(g1){$("nCd").textContent=fmt(g1.at-now);const k=+g1.at+"|"+(g2?+g2.at:0);if(k!==curKey){curKey=k;paint(g1,"nName","nCd","nAt",true);paint(g2,"fName","fCd","fAt",false);renderSched(g1.at)}}
-  if(g2)$("fCd").textContent=fmt(g2.at-now);
+  if(g2)$("fCd").textContent=fmtShort(g2.at-now);
 }
 function renderSched(nextAt){
   $("sched").innerHTML=SCHEDULE.map(s=>{
