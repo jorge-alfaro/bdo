@@ -8,36 +8,81 @@ import '../styles/global.css';
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Black Desert · Panel personal</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preload" href="/fonts/cinzel-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/fonts/fonts.css">
 </head>
 <body>
 <div class="wrap">
 
+  <!-- HEADER · ship's bell + logbook plate -->
   <div class="top">
-    <div class="logo"><b>Black Desert</b><span>ONLINE</span></div>
-    <div class="card clock">
-      <div class="time" id="time">--:--:--</div>
+    <div class="logo"><b>Black Desert</b><span>Bitácora del navegante</span></div>
+    <div class="plate clock">
       <div class="date" id="date"></div>
-      <div class="resets"><div>Reset Diario<b>6:00 PM</b></div><div>Reset Semanal<b>Mié · 6:00 PM</b></div></div>
-      <div class="today" id="weeklyTimer"></div>
+      <div class="time" id="time">--:--:--</div>
+      <div class="resets"><div>Reset diario<b>6:00 PM</b></div><div>Reset semanal<b>Mié · 6:00 PM</b></div></div>
+      <div class="reset-stamp"><small>próximo reset</small><span id="weeklyTimer"></span></div>
     </div>
   </div>
 
-  <!-- NEXT BOSS (lo más importante) -->
-  <div class="card next">
+  <!-- NEXT BOSS · la brújula -->
+  <div class="compass-card">
+    <div class="heading">Derrotero · próximo jefe</div>
     <div class="nb">
-      <div><h3>Next Boss</h3><div class="faces" id="nFaces"></div><div class="cd" id="nCd">--:--:--</div><div class="nm" id="nName"></div><div class="at" id="nAt"></div></div>
-      <div><h3>Followed By</h3><div class="faces" id="fFaces"></div><div class="cd f" id="fCd">--:--:--</div><div class="nm" id="fName"></div><div class="at" id="fAt"></div></div>
+      <div class="rose">
+        <svg width="120" height="120" viewBox="0 0 120 120" aria-hidden="true">
+          <circle cx="60" cy="60" r="56" fill="none" stroke="var(--line)" stroke-width="1"/>
+          <circle cx="60" cy="60" r="44" fill="none" stroke="var(--line)" stroke-width="1"/>
+          <!-- cardinal + intercardinal ticks -->
+          <g stroke="var(--line)" stroke-width="1">
+            <line x1="60" y1="6"  x2="60" y2="14"/>
+            <line x1="60" y1="106" x2="60" y2="114"/>
+            <line x1="6"  y1="60" x2="14" y2="60"/>
+            <line x1="106" y1="60" x2="114" y2="60"/>
+            <line x1="22" y1="22" x2="27" y2="27"/>
+            <line x1="98" y1="22" x2="93" y2="27"/>
+            <line x1="22" y1="98" x2="27" y2="93"/>
+            <line x1="98" y1="98" x2="93" y2="93"/>
+          </g>
+          <!-- cardinal labels -->
+          <g fill="var(--txt-dim)" font-family="Barlow,monospace" font-size="9" letter-spacing="1">
+            <text x="60" y="26" text-anchor="middle">N</text>
+            <text x="60" y="104" text-anchor="middle">S</text>
+            <text x="94" y="63" text-anchor="middle">E</text>
+            <text x="26" y="63" text-anchor="middle">O</text>
+          </g>
+          <!-- needle (rotates to point at next boss) -->
+          <g class="needle" id="needle">
+            <path d="M60 16 L65 60 L60 64 L55 60 Z" fill="var(--brass-bright)"/>
+            <path d="M60 104 L65 60 L60 64 L55 60 Z" fill="var(--vermilion)"/>
+            <circle cx="60" cy="60" r="4" fill="var(--brass-bright)"/>
+          </g>
+        </svg>
+      </div>
+      <div class="slot">
+        <div class="lbl">Next Boss</div>
+        <div class="nm" id="nName"></div>
+        <div class="cd" id="nCd">--:--:--</div>
+        <div class="at" id="nAt"></div>
+      </div>
+      <div class="slot">
+        <div class="lbl">Followed By</div>
+        <div class="nm" id="fName"></div>
+        <div class="cd f" id="fCd">--:--:--</div>
+        <div class="at" id="fAt"></div>
+      </div>
     </div>
   </div>
 
   <!-- JEFES MUNDIALES -->
-  <div class="card">
-    <h2>👹 Jefes Mundiales</h2>
+  <div class="paper">
+    <h2>Jefes Mundiales</h2>
     <div class="sub">Recompensas limitadas por semana · toca para marcar</div>
     <div class="bosses" id="bosses"></div>
-    <div style="text-align:right;margin-top:8px"><button class="rst" id="rstB">Reiniciar semana</button></div>
+    <div style="text-align:right;margin-top:10px"><button class="rst" id="rstB">Reiniciar semana</button></div>
 
-    <h2 style="margin-top:18px">Horarios personalizados para tu región</h2>
+    <h2 style="margin-top:20px">Horarios de tu región</h2>
     <div class="sc"><table>
       <thead><tr><th>Hora</th><th>Jefe</th><th>Días</th><th></th></tr></thead>
       <tbody id="sched"></tbody>
@@ -45,8 +90,8 @@ import '../styles/global.css';
   </div>
 
   <div class="two">
-    <div class="card">
-      <h2>🐴 Semanal</h2>
+    <div class="paper">
+      <h2>Semanal</h2>
       <div class="sub">Tu checklist de la semana</div>
       <div id="weeklies"></div>
       <div class="addw">
@@ -55,8 +100,8 @@ import '../styles/global.css';
         <button id="wa">+ Agregar</button>
       </div>
     </div>
-    <div class="card">
-      <h2>📅 Pendientes</h2>
+    <div class="paper">
+      <h2>Pendientes</h2>
       <div class="sub">Notas rápidas</div>
       <div id="todos"></div>
       <div class="add"><input id="ti" placeholder="Agregar nota..."><button id="ta">+</button></div>
@@ -67,11 +112,11 @@ import '../styles/global.css';
 <script>
 // ===== EDITA AQUÍ tus horarios (hora local, d = días 0=Dom..6=Sáb) =====
 const SCHEDULE=[
- {t:"11:00",boss:"Laulau",img:"/assets/laulau.webp",d:[0,1,2,3,4,5,6],txt:"Todos los días",tag:"Diario"},
- {t:"14:00",boss:"Garmoth",img:"/assets/garmoth.webp",d:[0,1,2,3,4,5,6],txt:"Todos los días",tag:"Diario"},
- {t:"16:00",boss:"Vell",img:"/assets/vell.webp",d:[0],txt:"Domingo",tag:"Semanal"},
- {t:"19:00",boss:"Vell",img:"/assets/vell.webp",d:[3],txt:"Miércoles",tag:"Semanal"},
- {t:"23:15",boss:"Garmoth",img:"/assets/garmoth.webp",d:[0,1,2,3,4,5],txt:"Todos excepto sábado",tag:"Diario"}
+ {t:"11:00",boss:"Laulau",img:"/assets/laulau.webp",br:90,d:[0,1,2,3,4,5,6],txt:"Todos los días",tag:"Diario"},
+ {t:"14:00",boss:"Garmoth",img:"/assets/garmoth.webp",br:0,d:[0,1,2,3,4,5,6],txt:"Todos los días",tag:"Diario"},
+ {t:"16:00",boss:"Vell",img:"/assets/vell.webp",br:270,d:[0],txt:"Domingo",tag:"Semanal"},
+ {t:"19:00",boss:"Vell",img:"/assets/vell.webp",br:270,d:[3],txt:"Miércoles",tag:"Semanal"},
+ {t:"23:15",boss:"Garmoth",img:"/assets/garmoth.webp",br:0,d:[0,1,2,3,4,5],txt:"Todos excepto sábado",tag:"Diario"}
 ];
 const BOSSES=[{n:"Garmoth",img:"/assets/garmoth.webp",max:3,r:"Escamas de Garmoth"},{n:"Laulau",img:"/assets/laulau.webp",max:1,r:"Botín semanal"},{n:"Vell",img:"/assets/vell.webp",max:1,r:"Corazón de Vell"}];
 // ======================================================================
@@ -114,11 +159,12 @@ function weeklyTimer(){ // cuenta regresiva al reset semanal (Mié 6:00 PM)
   const h=totalHours%24;
   return daysUntil===0 ? `[HOY] ${h}hrs` : `${d}D ${h}hrs`;
 }
-function paint(g,f,cd,nm,at){
+function pointNeedle(deg){$("needle").style.transform=`rotate(${deg}deg)`}
+function paint(g,slotName,slotCd,slotAt,next){
   if(!g)return;
-  $(f).innerHTML=g.items.map(o=>`<div class="face" title="${o.s.boss}"><img src="${o.s.img}" alt="${o.s.boss}"></div>`).join("");
-  $(nm).textContent=g.items.map(o=>o.s.boss).join(" | ");
-  $(at).textContent="a las "+hm(g.at);
+  $(slotName).textContent=g.items.map(o=>o.s.boss).join(" | ");
+  $(slotAt).textContent="a las "+hm(g.at);
+  if(next)pointNeedle(g.items[0].s.br);
 }
 let curKey="";
 function tick(){
@@ -128,7 +174,7 @@ function tick(){
   $("date").textContent=d.charAt(0).toUpperCase()+d.slice(1);
   $("weeklyTimer").textContent=weeklyTimer();
   const l=occ(),g1=group(l,0),g2=g1?group(l,g1.end):null;
-  if(g1){$("nCd").textContent=fmt(g1.at-now);const k=+g1.at+"|"+(g2?+g2.at:0);if(k!==curKey){curKey=k;paint(g1,"nFaces","nCd","nName","nAt");paint(g2,"fFaces","fCd","fName","fAt");renderSched(g1.at)}}
+  if(g1){$("nCd").textContent=fmt(g1.at-now);const k=+g1.at+"|"+(g2?+g2.at:0);if(k!==curKey){curKey=k;paint(g1,"nName","nCd","nAt",true);paint(g2,"fName","fCd","fAt",false);renderSched(g1.at)}}
   if(g2)$("fCd").textContent=fmt(g2.at-now);
 }
 function renderSched(nextAt){
@@ -140,14 +186,14 @@ function renderSched(nextAt){
 let cnt=store.get("bdo_cnt",{});
 function renderB(){
   $("bosses").innerHTML=BOSSES.map(b=>{const c=cnt[b.n]||0,done=c>=b.max;
-    return `<div class="b ${done?"done":""}" data-n="${b.n}"><div class="em"><img src="${b.img}" alt="${b.n}"></div><b>${b.n}</b><div class="c">${done?"✔ ":"○ "}${c} / ${b.max}</div><small>${b.r}</small></div>`}).join("");
+    return `<div class="b ${done?"done":""}" data-n="${b.n}"><div class="em"><img src="${b.img}" alt="${b.n}"></div><b>${b.n}</b><div class="c">${done?"✔ ":"○ "}${c} / ${b.max}</div><small>${b.r}</small>${done?'<span class="stamp">Hecho</span>':""}</div>`}).join("");
   document.querySelectorAll(".b").forEach(e=>e.onclick=()=>{const b=BOSSES.find(x=>x.n===e.dataset.n);cnt[b.n]=(cnt[b.n]||0)>=b.max?0:(cnt[b.n]||0)+1;store.set("bdo_cnt",cnt);renderB()});
 }
 $("rstB").onclick=()=>{cnt={};store.set("bdo_cnt",cnt);renderB();weeklies=weeklies.map(w=>({...w,done:false}));store.set("bdo_weekly",weeklies);renderW()};
 // Semanal (checklist) — las tareas persisten, solo se desmarca el check al resetear
 let weeklies=(store.get("bdo_weekly",[])||[]).map(w=>typeof w==="string"?{t:w,done:false,desc:""}:{t:w.t,done:!!w.done,desc:w.desc||""});
 function renderW(){
-  $("weeklies").innerHTML=weeklies.map((w,i)=>`<div class="wi"><label class="chk"><input type="checkbox" data-i="${i}" ${w.done?"checked":""}><div><b></b><small></small></div></label><button data-i="${i}">✕</button></div>`).join("");
+  $("weeklies").innerHTML=weeklies.map((w,i)=>`<div class="wi"><label class="chk"><input type="checkbox" data-i="${i}" ${w.done?"checked":""}><div><b></b><small></small></div></label><button class="btnx" data-i="${i}">✕</button></div>`).join("");
   document.querySelectorAll("#weeklies .wi").forEach((el,i)=>{
     el.querySelector("b").textContent=weeklies[i].t;
     el.querySelector("small").textContent=weeklies[i].desc;
@@ -166,7 +212,7 @@ $("wa").onclick=addW;$("wi").onkeydown=e=>{if(e.key==="Enter")addW()};$("wid").o
 // Pendientes
 let todos=store.get("bdo_todos",[]);
 function renderT(){
-  $("todos").innerHTML=todos.map((t,i)=>`<div class="pi"><span></span><button data-i="${i}">✕</button></div>`).join("");
+  $("todos").innerHTML=todos.map((t,i)=>`<div class="pi"><span></span><button class="btnx" data-i="${i}">✕</button></div>`).join("");
   document.querySelectorAll("#todos .pi").forEach((el,i)=>{el.firstChild.textContent=todos[i];el.lastChild.onclick=()=>{todos.splice(i,1);store.set("bdo_todos",todos);renderT()}});
 }
 function addT(){const v=$("ti").value.trim();if(!v)return;todos.push(v);$("ti").value="";store.set("bdo_todos",todos);renderT()}
