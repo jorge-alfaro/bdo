@@ -8,7 +8,7 @@ web
 
 ## Users
 
-Un único usuario: el propio jugador de Black Desert Online, que juega desde México. Uso estrictamente personal; nadie más ve ni usa el panel.
+Jugador de BDO, México, panel personal.
 
 ## Product Purpose
 
