@@ -5,6 +5,13 @@
   "assets": {
     "directory": "./dist"
   },
+  "routes": [
+    {
+      "pattern": "bdo.alfaro.pw",
+      "custom_domain": true
+    }
+  ],
+  "workers_dev": false,
   "observability": {
     "enabled": true
   }

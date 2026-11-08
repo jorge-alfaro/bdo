@@ -1,0 +1,34 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "cloudflare": {
+      "enabled": true,
+      "oauth": {},
+      "type": "remote",
+      "url": "https://mcp.cloudflare.com/mcp"
+    },
+    "cloudflare-bindings": {
+      "enabled": true,
+      "oauth": {},
+      "type": "remote",
+      "url": "https://bindings.mcp.cloudflare.com/mcp"
+    },
+    "cloudflare-builds": {
+      "enabled": true,
+      "oauth": {},
+      "type": "remote",
+      "url": "https://builds.mcp.cloudflare.com/mcp"
+    },
+    "cloudflare-docs": {
+      "enabled": true,
+      "type": "remote",
+      "url": "https://docs.mcp.cloudflare.com/mcp"
+    },
+    "cloudflare-observability": {
+      "enabled": true,
+      "oauth": {},
+      "type": "remote",
+      "url": "https://observability.mcp.cloudflare.com/mcp"
+    }
+  }
+}
