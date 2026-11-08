@@ -48,6 +48,30 @@ import '../styles/global.css';
     </div>
   </div>
 
+  <!-- SEMANAL + PENDIENTES · debajo del próximo jefe -->
+  <div class="two">
+    <div class="paper col-card" id="card-weeklies">
+      <div class="col-head">
+        <h2 class="col-toggle" data-card="weeklies">Semanal</h2>
+        <button class="addbtn" data-modal="weekly" title="Agregar tarea semanal" aria-label="Agregar tarea semanal">+</button>
+      </div>
+      <div class="col-body">
+        <div class="sub">Tu checklist de la semana</div>
+        <div id="weeklies"></div>
+      </div>
+    </div>
+    <div class="paper col-card" id="card-todos">
+      <div class="col-head">
+        <h2 class="col-toggle" data-card="todos">Pendientes</h2>
+        <button class="addbtn" data-modal="todo" title="Agregar nota" aria-label="Agregar nota">+</button>
+      </div>
+      <div class="col-body">
+        <div class="sub">Notas rápidas</div>
+        <div id="todos"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- JEFES MUNDIALES -->
   <div class="paper">
     <h2>Jefes Mundiales</h2>
@@ -61,23 +85,22 @@ import '../styles/global.css';
       <tbody id="sched"></tbody>
     </table></div>
   </div>
+</div>
 
-  <div class="two">
-    <div class="paper">
-      <h2>Semanal</h2>
-      <div class="sub">Tu checklist de la semana</div>
-      <div id="weeklies"></div>
-      <div class="addw">
-        <input id="wi" placeholder="Título...">
-        <input id="wid" placeholder="Descripción...">
-        <button id="wa">+ Agregar</button>
-      </div>
+<!-- MODAL · agregar notas -->
+<div class="modal-overlay" id="modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h3 id="modalTitle">Nueva nota</h3>
+    <div id="modalWeekly" class="modal-fields" hidden>
+      <input id="wi" placeholder="Título...">
+      <input id="wid" placeholder="Descripción...">
     </div>
-    <div class="paper">
-      <h2>Pendientes</h2>
-      <div class="sub">Notas rápidas</div>
-      <div id="todos"></div>
-      <div class="add"><input id="ti" placeholder="Agregar nota..."><button id="ta">+</button></div>
+    <div id="modalTodo" class="modal-fields" hidden>
+      <input id="ti" placeholder="Agregar nota...">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="modalCancel">Cancelar</button>
+      <button class="btn-primary" id="modalSave">Agregar</button>
     </div>
   </div>
 </div>
@@ -182,21 +205,54 @@ function renderW(){
   });
 }
 function addW(){
-  const t=$("wi").value.trim();if(!t)return;
+  const t=$("wi").value.trim();if(!t)return false;
   const d=$("wid").value.trim();
   weeklies.push({t,done:false,desc:d});
-  $("wi").value="";$("wid").value="";
   store.set("bdo_weekly",weeklies);renderW();
+  return true;
 }
-$("wa").onclick=addW;$("wi").onkeydown=e=>{if(e.key==="Enter")addW()};$("wid").onkeydown=e=>{if(e.key==="Enter")addW()};
 // Pendientes
 let todos=store.get("bdo_todos",[]);
 function renderT(){
   $("todos").innerHTML=todos.map((t,i)=>`<div class="pi"><span></span><button class="btnx" data-i="${i}">✕</button></div>`).join("");
   document.querySelectorAll("#todos .pi").forEach((el,i)=>{el.firstChild.textContent=todos[i];el.lastChild.onclick=()=>{todos.splice(i,1);store.set("bdo_todos",todos);renderT()}});
 }
-function addT(){const v=$("ti").value.trim();if(!v)return;todos.push(v);$("ti").value="";store.set("bdo_todos",todos);renderT()}
-$("ta").onclick=addT;$("ti").onkeydown=e=>{if(e.key==="Enter")addT()};
+function addT(){const v=$("ti").value.trim();if(!v)return false;todos.push(v);store.set("bdo_todos",todos);renderT();return true}
+
+// --- Modal para agregar notas ---
+let modalMode=null;
+function openModal(mode){
+  modalMode=mode;
+  $("modalTitle").textContent = mode==="weekly" ? "Nueva tarea semanal" : "Nueva nota";
+  $("modalWeekly").hidden = mode!=="weekly";
+  $("modalTodo").hidden = mode!=="todo";
+  $("modal").hidden=false;
+  (mode==="weekly"?$("wi"):$("ti")).focus();
+}
+function closeModal(){
+  $("modal").hidden=true;
+  $("wi").value="";$("wid").value="";$("ti").value="";
+  modalMode=null;
+}
+function saveModal(){
+  if(modalMode==="weekly"){ if(addW()) closeModal(); }
+  else if(modalMode==="todo"){ if(addT()) closeModal(); }
+}
+$("modalSave").onclick=saveModal;
+$("modalCancel").onclick=closeModal;
+$("modal").addEventListener("click",e=>{ if(e.target===$("modal")) closeModal(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape" && !$("modal").hidden) closeModal(); });
+["wi","wid","ti"].forEach(id=>$(id).addEventListener("keydown",e=>{ if(e.key==="Enter") saveModal(); }));
+document.querySelectorAll(".addbtn").forEach(b=>b.onclick=()=>openModal(b.dataset.modal));
+
+// --- Secciones desplegables (estado en localStorage) ---
+let ui=Object.assign({weeklies:true,todos:true},store.get("bdo_ui",{}));
+function applyCollapse(card,open){const el=document.getElementById("card-"+card);if(el)el.classList.toggle("collapsed",!open);}
+function toggleCard(card){ui[card]=!ui[card];store.set("bdo_ui",ui);applyCollapse(card,ui[card]);}
+document.querySelectorAll(".col-toggle").forEach(h=>h.onclick=()=>toggleCard(h.dataset.card));
+applyCollapse("weeklies",ui.weeklies);
+applyCollapse("todos",ui.todos);
+
 renderB();renderT();renderW();renderSched();tick();setInterval(tick,1000);
 </script>
 </body>
