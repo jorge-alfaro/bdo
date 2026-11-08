@@ -41,9 +41,14 @@ import '../styles/global.css';
       </div>
       <div class="slot">
         <div class="lbl">Followed By</div>
-        <div class="nm" id="fName"></div>
-        <div class="cd f" id="fCd">--:--:--</div>
-        <div class="at" id="fAt"></div>
+        <div class="fby">
+          <div class="fby-thumb"><img id="fImg" src="/assets/garmoth.webp" alt="Siguiente jefe"></div>
+          <div class="fby-info">
+            <div class="nm" id="fName"></div>
+            <div class="cd f" id="fCd">--:--</div>
+            <div class="at" id="fAt"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -170,6 +175,7 @@ function paint(g,slotName,slotCd,slotAt,next){
   $(slotName).textContent=g.items.map(o=>o.s.boss).join(" | ");
   $(slotAt).textContent="a las "+hm(g.at);
   if(next){$("nImg").src=g.items[0].s.img;$("region").textContent=[...new Set(g.items.map(o=>o.s.region))].join(" · ");}
+  else{$("fImg").src=g.items[0].s.img;}
 }
 let curKey="";
 function tick(){
