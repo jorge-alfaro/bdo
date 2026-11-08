@@ -380,6 +380,8 @@ tr.nx td{background:rgba(198,145,46,.10)}
   padding:20px;box-shadow:0 24px 70px -22px rgba(0,0,0,.75);
 }
 .modal h3{margin:0 0 16px;font-family:"Cinzel",Georgia,serif;font-size:1.12rem;letter-spacing:.02em}
+.modal .msg{margin:0;color:var(--ink-dim);font-size:.92rem;line-height:1.5}
+.modal .msg b{color:var(--ink);font-weight:600}
 .modal-fields{display:flex;flex-direction:column;gap:9px}
 .modal-fields[hidden]{display:none}
 .modal-fields input{

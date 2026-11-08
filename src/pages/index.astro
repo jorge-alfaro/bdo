@@ -114,6 +114,18 @@ import '../styles/global.css';
   </div>
 </div>
 
+<!-- MODAL · confirmar reinicio semanal -->
+<div class="modal-overlay" id="confirm" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <h3 id="confirmTitle">¿Reiniciar la semana?</h3>
+    <p class="msg">Se reiniciarán los contadores de jefes y se desmarcarán las tareas de <b>Semanal</b>. Las notas de <b>Rápidas</b> no se tocan.</p>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="confirmCancel">Cancelar</button>
+      <button class="btn-primary" id="confirmOk">Reiniciar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ===== EDITA AQUÍ tus horarios (hora local, d = días 0=Dom..6=Sáb) =====
 const SCHEDULE=[
@@ -202,7 +214,11 @@ function renderB(){
     return `<div class="b ${done?"done":""}" data-n="${b.n}"><div class="em"><img src="${b.img}" alt="${b.n}"></div><b>${b.n}</b><div class="c">${done?"✔ ":"○ "}${c} / ${b.max}</div><small>${b.r}</small>${done?'<span class="stamp">Hecho</span>':""}</div>`}).join("");
   document.querySelectorAll(".b").forEach(e=>e.onclick=()=>{const b=BOSSES.find(x=>x.n===e.dataset.n);cnt[b.n]=(cnt[b.n]||0)>=b.max?0:(cnt[b.n]||0)+1;store.set("bdo_cnt",cnt);renderB()});
 }
-$("rstB").onclick=()=>{cnt={};store.set("bdo_cnt",cnt);renderB();weeklies=weeklies.map(w=>({...w,done:false}));store.set("bdo_weekly",weeklies);renderW()};
+function resetWeek(){cnt={};store.set("bdo_cnt",cnt);renderB();weeklies=weeklies.map(w=>({...w,done:false}));store.set("bdo_weekly",weeklies);renderW()}
+$("rstB").onclick=()=>{$("confirm").hidden=false;$("confirmOk").focus()};
+$("confirmOk").onclick=()=>{resetWeek();$("confirm").hidden=true};
+$("confirmCancel").onclick=()=>{$("confirm").hidden=true};
+$("confirm").addEventListener("click",e=>{if(e.target===$("confirm"))$("confirm").hidden=true});
 // Semanal (checklist) — las tareas persisten, solo se desmarca el check al resetear
 let weeklies=(store.get("bdo_weekly",[])||[]).map(w=>typeof w==="string"?{t:w,done:false,desc:""}:{t:w.t,done:!!w.done,desc:w.desc||""});
 function renderW(){
@@ -251,7 +267,7 @@ function saveModal(){
 $("modalSave").onclick=saveModal;
 $("modalCancel").onclick=closeModal;
 $("modal").addEventListener("click",e=>{ if(e.target===$("modal")) closeModal(); });
-document.addEventListener("keydown",e=>{ if(e.key==="Escape" && !$("modal").hidden) closeModal(); });
+document.addEventListener("keydown",e=>{ if(e.key!=="Escape")return; if(!$("modal").hidden) closeModal(); if(!$("confirm").hidden) $("confirm").hidden=true; });
 ["wi","wid","ti"].forEach(id=>$(id).addEventListener("keydown",e=>{ if(e.key==="Enter") saveModal(); }));
 document.querySelectorAll(".addbtn").forEach(b=>b.onclick=()=>openModal(b.dataset.modal));
 
