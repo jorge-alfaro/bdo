@@ -349,8 +349,11 @@ tr.nx td{background:rgba(198,145,46,.10)}
 .col-card:not(.collapsed) .col-bar{border-bottom:1px solid var(--line-paper)}
 .col-card.collapsed .col-body{display:none}
 .col-body{padding:14px 18px 18px}
-.col-subrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
-.col-subrow .sub{margin:0}
+.notes-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.notes-block{min-width:0}
+.nb-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.nb-head h3{margin:0;font-family:"Cinzel",Georgia,serif;font-weight:600;font-size:.98rem;letter-spacing:.02em;color:var(--ink)}
+.nb-sub{color:var(--ink-dim);font-size:.8rem;margin:2px 0 10px}
 .addbtn{
   background:none;border:1px solid var(--line-paper);color:var(--brass-ink);
   width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1.2rem;line-height:1;
@@ -393,6 +396,7 @@ tr.nx td{background:rgba(198,145,46,.10)}
 
 @media(max-width:720px){
   .top,.two{grid-template-columns:1fr}
+  .notes-grid{grid-template-columns:1fr;gap:16px}
   .nb{grid-template-columns:1fr;text-align:center;gap:14px}
   .portrait{margin:0 auto}
   .slot{text-align:center}

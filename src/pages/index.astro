@@ -48,32 +48,30 @@ import '../styles/global.css';
     </div>
   </div>
 
-  <!-- SEMANAL + PENDIENTES · debajo del próximo jefe -->
-  <div class="two">
-    <div class="paper col-card" id="card-weeklies">
-      <button class="col-bar" data-card="weeklies" aria-expanded="true">
-        <span class="col-title">Semanal</span>
-        <span class="col-caret" aria-hidden="true"></span>
-      </button>
-      <div class="col-body">
-        <div class="col-subrow">
-          <div class="sub">Tu checklist de la semana</div>
-          <button class="addbtn" data-modal="weekly" title="Agregar tarea semanal" aria-label="Agregar tarea semanal">+</button>
+  <!-- NOTAS · un solo desplegable con Semanal + Notas -->
+  <div class="paper col-card" id="card-notas">
+    <button class="col-bar" data-card="notas" aria-expanded="true">
+      <span class="col-title">Notas</span>
+      <span class="col-caret" aria-hidden="true"></span>
+    </button>
+    <div class="col-body">
+      <div class="notes-grid">
+        <div class="notes-block">
+          <div class="nb-head">
+            <h3>Semanal</h3>
+            <button class="addbtn" data-modal="weekly" title="Agregar tarea semanal" aria-label="Agregar tarea semanal">+</button>
+          </div>
+          <div class="nb-sub">Tu checklist de la semana</div>
+          <div id="weeklies"></div>
         </div>
-        <div id="weeklies"></div>
-      </div>
-    </div>
-    <div class="paper col-card" id="card-todos">
-      <button class="col-bar" data-card="todos" aria-expanded="true">
-        <span class="col-title">Pendientes</span>
-        <span class="col-caret" aria-hidden="true"></span>
-      </button>
-      <div class="col-body">
-        <div class="col-subrow">
-          <div class="sub">Notas rápidas</div>
-          <button class="addbtn" data-modal="todo" title="Agregar nota" aria-label="Agregar nota">+</button>
+        <div class="notes-block">
+          <div class="nb-head">
+            <h3>Notas</h3>
+            <button class="addbtn" data-modal="todo" title="Agregar nota" aria-label="Agregar nota">+</button>
+          </div>
+          <div class="nb-sub">Notas rápidas</div>
+          <div id="todos"></div>
         </div>
-        <div id="todos"></div>
       </div>
     </div>
   </div>
@@ -252,12 +250,11 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape" && !$("modal").hidd
 document.querySelectorAll(".addbtn").forEach(b=>b.onclick=()=>openModal(b.dataset.modal));
 
 // --- Secciones desplegables (estado en localStorage) ---
-let ui=Object.assign({weeklies:true,todos:true},store.get("bdo_ui",{}));
+let ui=Object.assign({notas:true},store.get("bdo_ui",{}));
 function applyCollapse(card,open){const el=document.getElementById("card-"+card);if(!el)return;el.classList.toggle("collapsed",!open);const bar=el.querySelector(".col-bar");if(bar)bar.setAttribute("aria-expanded",open?"true":"false");}
 function toggleCard(card){ui[card]=!ui[card];store.set("bdo_ui",ui);applyCollapse(card,ui[card]);}
 document.querySelectorAll(".col-bar").forEach(b=>b.onclick=()=>toggleCard(b.dataset.card));
-applyCollapse("weeklies",ui.weeklies);
-applyCollapse("todos",ui.todos);
+applyCollapse("notas",ui.notas);
 
 renderB();renderT();renderW();renderSched();tick();setInterval(tick,1000);
 </script>
