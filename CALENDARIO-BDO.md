@@ -2,7 +2,6 @@
 
 > Horarios en hora de México (GMT-6), formato 24h.
 > Fuente: calendario oficial del jugador.
-> **Nota de nombres:** en el panel, el jefe **Laulau** corresponde a **Rawr-Rawr** del calendario.
 
 ## Tabla completa
 
@@ -25,7 +24,7 @@ Cada celda puede tener dos jefes: el primero es el principal, el segundo (separa
 | Jefe (panel) | Jefe (calendario) | Región más cercana | Días y horas |
 |--------------|-------------------|--------------------|--------------|
 | Garmoth | Garmoth | Duvencrune | Diario 14:00 · Dom 19:00 · Dom–Vie 23:15 (sábado NO hay 23:15) |
-| Laulau | Rawr-Rawr | O'dyllita | Diario 18:00 |
+| Rawr-Rawr | Rawr-Rawr | O'dyllita | Diario 18:00 |
 | Vell | Vell | Ojo de Oquilla | Dom 16:00 · Mié 19:00 |
 | Quint | Quint | Calpheon | Jue 16:00 · Sáb 19:00 |
 | Karanda | Karanda | Olvia | Lun 19:00 · Mié 00:15 (madrugada) · Mié 22:15 · Vie 12:00 |

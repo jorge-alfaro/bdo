@@ -115,7 +115,7 @@ const SCHEDULE=[
  {t:"14:00",boss:"Garmoth",img:"/assets/garmoth.webp",region:"Duvencrune",d:[0,1,2,3,4,5,6],txt:"Todos los días",tag:"Diario"},
  {t:"16:00",boss:"Vell",img:"/assets/vell.webp",region:"Ojo de Oquilla",d:[0],txt:"Domingo",tag:"Semanal"},
  {t:"16:00",boss:"Quint",img:"/assets/quint.webp",region:"Calpheon",d:[4],txt:"Jueves",tag:"Semanal"},
- {t:"18:00",boss:"Laulau",img:"/assets/laulau.webp",region:"O'dyllita",d:[0,1,2,3,4,5,6],txt:"Todos los días",tag:"Diario"},
+ {t:"18:00",boss:"Rawr-Rawr",img:"/assets/rawr-rawr.webp",region:"O'dyllita",d:[0,1,2,3,4,5,6],txt:"Todos los días",tag:"Diario"},
  {t:"19:00",boss:"Garmoth",img:"/assets/garmoth.webp",region:"Duvencrune",d:[0],txt:"Domingo",tag:"Semanal"},
  {t:"19:00",boss:"Vell",img:"/assets/vell.webp",region:"Ojo de Oquilla",d:[3],txt:"Miércoles",tag:"Semanal"},
  {t:"19:00",boss:"Karanda",img:"/assets/karanda.webp",region:"Olvia",d:[1],txt:"Lunes",tag:"Semanal"},
@@ -123,7 +123,7 @@ const SCHEDULE=[
  {t:"22:15",boss:"Karanda",img:"/assets/karanda.webp",region:"Olvia",d:[3],txt:"Miércoles",tag:"Semanal"},
  {t:"23:15",boss:"Garmoth",img:"/assets/garmoth.webp",region:"Duvencrune",d:[0,1,2,3,4,5],txt:"Todos excepto sábado",tag:"Diario"}
 ];
-const BOSSES=[{n:"Garmoth",img:"/assets/garmoth.webp",max:3,r:"Escamas de Garmoth"},{n:"Laulau",img:"/assets/laulau.webp",max:1,r:"Botín semanal"},{n:"Vell",img:"/assets/vell.webp",max:1,r:"Corazón de Vell"},{n:"Quint",img:"/assets/quint.webp",max:2,r:"Estatua de Quint · Piedra Iridiscente"},{n:"Karanda",img:"/assets/karanda.webp",max:1,r:"Auras latentes (100) → Cofre Dienteleón"}];
+const BOSSES=[{n:"Garmoth",img:"/assets/garmoth.webp",max:3,r:"Escamas de Garmoth"},{n:"Rawr-Rawr",img:"/assets/rawr-rawr.webp",max:1,r:"Botín semanal"},{n:"Vell",img:"/assets/vell.webp",max:1,r:"Corazón de Vell"},{n:"Quint",img:"/assets/quint.webp",max:2,r:"Estatua de Quint · Piedra Iridiscente"},{n:"Karanda",img:"/assets/karanda.webp",max:1,r:"Auras latentes (100) → Cofre Dienteleón"}];
 // ======================================================================
 const $=id=>document.getElementById(id);
 const pad=n=>String(n).padStart(2,"0");
@@ -188,7 +188,7 @@ function renderSched(nextAt){
     return `<tr class="${nx?"nx":""}"><td>${s.t}</td><td><img class="mini" src="${s.img}" alt="${s.boss}"> ${s.boss}</td><td>${s.txt}</td><td><span class="tag ${s.tag==="Diario"?"d":"s"}">${s.tag}</span></td></tr>`}).join("");
 }
 // Contadores de jefes
-let cnt=store.get("bdo_cnt",{});
+let cnt=store.get("bdo_cnt",{});if(cnt.Laulau!==undefined&&cnt["Rawr-Rawr"]===undefined){cnt["Rawr-Rawr"]=cnt.Laulau;delete cnt.Laulau;store.set("bdo_cnt",cnt);}
 function renderB(){
   $("bosses").innerHTML=BOSSES.map(b=>{const c=cnt[b.n]||0,done=c>=b.max;
     return `<div class="b ${done?"done":""}" data-n="${b.n}"><div class="em"><img src="${b.img}" alt="${b.n}"></div><b>${b.n}</b><div class="c">${done?"✔ ":"○ "}${c} / ${b.max}</div><small>${b.r}</small>${done?'<span class="stamp">Hecho</span>':""}</div>`}).join("");

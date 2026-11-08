@@ -23,7 +23,7 @@ Un panel personal de Black Desert que reúne en una sola vista todo lo que el ju
 - Juego: Black Desert Online.
 - Rituales de uso: el jugador revisa el panel durante la sesión para saber qué jefe viene, cuánto falta para el reset, qué tareas semanales tiene pendientes y recordatorios.
 - Resets del juego: reset diario a las 6:00 PM; reset semanal los miércoles a las 6:00 PM.
-- Jefes mundiales activos en el panel: Garmoth, Laulau, Vell.
+- Jefes mundiales activos en el panel: Garmoth, Rawr-Rawr, Vell.
 - Jefes pendientes (imágenes en `public/assets/` sin horario aún): Karanda, Quint.
 
 ## Capabilities and Constraints
@@ -42,12 +42,12 @@ Un panel personal de Black Desert que reúne en una sola vista todo lo que el ju
 ## Brand Commitments
 
 - Nombre del juego y del panel: "Black Desert · Panel personal".
-- Retratos de jefes como identidad visual: imágenes `.webp` en `public/assets/` (garmoth, laulau, vell, karanda, quint). El panel ya usa estos retratos en lugar de emojis para los jefes.
+- Retratos de jefes como identidad visual: imágenes `.webp` en `public/assets/` (garmoth, rawr-rawr, vell, karanda, quint). El panel ya usa estos retratos en lugar de emojis para los jefes.
 - Tono: personal y directo, en español de México.
 
 ## Evidence on Hand
 
-- Retratos de jefes: `public/assets/{garmoth,laulau,vell,karanda,quint}.webp`.
+- Retratos de jefes: `public/assets/{garmoth,rawr-rawr,vell,karanda,quint}.webp`.
 - Datos de horario y recompensas actuales en `src/pages/index.astro` (constantes `SCHEDULE` y `BOSSES`).
 
 ## Product Principles
