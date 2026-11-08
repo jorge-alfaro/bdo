@@ -28,7 +28,13 @@ Cada celda puede tener dos jefes: el primero es el principal, el segundo (separa
 | Laulau | Rawr-Rawr | Diario 18:00 |
 | Vell | Vell | Dom 16:00 · Mié 19:00 |
 | Quint | Quint | Jue 16:00 · Sáb 19:00 |
-| Karanda | Karanda | Lun 19:00 · Mié 00:15 · Mié 22:15 · Vie 12:00 |
+| Karanda | Karanda | Lun 19:00 · Mié 00:15 (madrugada) · Mié 22:15 · Vie 12:00 |
+
+### Karanda — botín
+
+- Da loot en cada derrota, pero el **Cofre de Armas de Dienteleón** es raro (baja probabilidad). Normalmente hay que derrotarla muchas veces para que caiga.
+- **Auras latentes de Karanda**: vía garantizada. Al juntar **100 auras** obtienes el arma.
+- En el panel, el contador de Karanda cuenta auras (0 → 100) y **no se reinicia** con "Reiniciar semana" (las auras se acumulan entre semanas).
 
 ## Jefes del calendario que NO están en el panel
 

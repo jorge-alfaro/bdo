@@ -98,7 +98,7 @@ const SCHEDULE=[
  {t:"22:15",boss:"Karanda",img:"/assets/karanda.webp",d:[3],txt:"Miércoles",tag:"Semanal"},
  {t:"23:15",boss:"Garmoth",img:"/assets/garmoth.webp",d:[0,1,2,3,4,5],txt:"Todos excepto sábado",tag:"Diario"}
 ];
-const BOSSES=[{n:"Garmoth",img:"/assets/garmoth.webp",max:3,r:"Escamas de Garmoth"},{n:"Laulau",img:"/assets/laulau.webp",max:1,r:"Botín semanal"},{n:"Vell",img:"/assets/vell.webp",max:1,r:"Corazón de Vell"},{n:"Quint",img:"/assets/quint.webp",max:2,r:"Estatua de Quint · Piedra Iridiscente"}];
+const BOSSES=[{n:"Garmoth",img:"/assets/garmoth.webp",max:3,r:"Escamas de Garmoth"},{n:"Laulau",img:"/assets/laulau.webp",max:1,r:"Botín semanal"},{n:"Vell",img:"/assets/vell.webp",max:1,r:"Corazón de Vell"},{n:"Quint",img:"/assets/quint.webp",max:2,r:"Estatua de Quint · Piedra Iridiscente"},{n:"Karanda",img:"/assets/karanda.webp",max:100,persist:true,r:"Auras latentes → Cofre Dienteleón"}];
 // ======================================================================
 const $=id=>document.getElementById(id);
 const pad=n=>String(n).padStart(2,"0");
@@ -169,7 +169,7 @@ function renderB(){
     return `<div class="b ${done?"done":""}" data-n="${b.n}"><div class="em"><img src="${b.img}" alt="${b.n}"></div><b>${b.n}</b><div class="c">${done?"✔ ":"○ "}${c} / ${b.max}</div><small>${b.r}</small>${done?'<span class="stamp">Hecho</span>':""}</div>`}).join("");
   document.querySelectorAll(".b").forEach(e=>e.onclick=()=>{const b=BOSSES.find(x=>x.n===e.dataset.n);cnt[b.n]=(cnt[b.n]||0)>=b.max?0:(cnt[b.n]||0)+1;store.set("bdo_cnt",cnt);renderB()});
 }
-$("rstB").onclick=()=>{cnt={};store.set("bdo_cnt",cnt);renderB();weeklies=weeklies.map(w=>({...w,done:false}));store.set("bdo_weekly",weeklies);renderW()};
+$("rstB").onclick=()=>{const keep={};BOSSES.forEach(b=>{if(b.persist&&cnt[b.n])keep[b.n]=cnt[b.n]});cnt=keep;store.set("bdo_cnt",cnt);renderB();weeklies=weeklies.map(w=>({...w,done:false}));store.set("bdo_weekly",weeklies);renderW()};
 // Semanal (checklist) — las tareas persisten, solo se desmarca el check al resetear
 let weeklies=(store.get("bdo_weekly",[])||[]).map(w=>typeof w==="string"?{t:w,done:false,desc:""}:{t:w.t,done:!!w.done,desc:w.desc||""});
 function renderW(){
