@@ -85,12 +85,17 @@ import '../styles/global.css';
 <script>
 // ===== EDITA AQUÍ tus horarios (hora local, d = días 0=Dom..6=Sáb) =====
 const SCHEDULE=[
- {t:"18:00",boss:"Laulau",img:"/assets/laulau.webp",d:[0,1,2,3,4,5,6],txt:"Todos los días",tag:"Diario"},
+ {t:"00:15",boss:"Karanda",img:"/assets/karanda.webp",d:[3],txt:"Miércoles",tag:"Semanal"},
+ {t:"12:00",boss:"Karanda",img:"/assets/karanda.webp",d:[5],txt:"Viernes",tag:"Semanal"},
  {t:"14:00",boss:"Garmoth",img:"/assets/garmoth.webp",d:[0,1,2,3,4,5,6],txt:"Todos los días",tag:"Diario"},
  {t:"16:00",boss:"Vell",img:"/assets/vell.webp",d:[0],txt:"Domingo",tag:"Semanal"},
  {t:"16:00",boss:"Quint",img:"/assets/quint.webp",d:[4],txt:"Jueves",tag:"Semanal"},
+ {t:"18:00",boss:"Laulau",img:"/assets/laulau.webp",d:[0,1,2,3,4,5,6],txt:"Todos los días",tag:"Diario"},
+ {t:"19:00",boss:"Garmoth",img:"/assets/garmoth.webp",d:[0],txt:"Domingo",tag:"Semanal"},
  {t:"19:00",boss:"Vell",img:"/assets/vell.webp",d:[3],txt:"Miércoles",tag:"Semanal"},
+ {t:"19:00",boss:"Karanda",img:"/assets/karanda.webp",d:[1],txt:"Lunes",tag:"Semanal"},
  {t:"19:00",boss:"Quint",img:"/assets/quint.webp",d:[6],txt:"Sábado",tag:"Semanal"},
+ {t:"22:15",boss:"Karanda",img:"/assets/karanda.webp",d:[3],txt:"Miércoles",tag:"Semanal"},
  {t:"23:15",boss:"Garmoth",img:"/assets/garmoth.webp",d:[0,1,2,3,4,5],txt:"Todos excepto sábado",tag:"Diario"}
 ];
 const BOSSES=[{n:"Garmoth",img:"/assets/garmoth.webp",max:3,r:"Escamas de Garmoth"},{n:"Laulau",img:"/assets/laulau.webp",max:1,r:"Botín semanal"},{n:"Vell",img:"/assets/vell.webp",max:1,r:"Corazón de Vell"},{n:"Quint",img:"/assets/quint.webp",max:2,r:"Estatua de Quint · Piedra Iridiscente"}];
