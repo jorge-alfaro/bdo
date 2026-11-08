@@ -256,7 +256,7 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape" && !$("modal").hidd
 document.querySelectorAll(".addbtn").forEach(b=>b.onclick=()=>openModal(b.dataset.modal));
 
 // --- Secciones desplegables (estado en localStorage) ---
-let ui=Object.assign({notas:true},store.get("bdo_ui",{}));
+let ui=Object.assign({notas:false},store.get("bdo_ui",{}));
 function applyCollapse(card,open){const el=document.getElementById("card-"+card);if(!el)return;el.classList.toggle("collapsed",!open);const bar=el.querySelector(".col-bar");if(bar)bar.setAttribute("aria-expanded",open?"true":"false");}
 function toggleCard(card){ui[card]=!ui[card];store.set("bdo_ui",ui);applyCollapse(card,ui[card]);}
 document.querySelectorAll(".col-bar").forEach(b=>b.onclick=()=>toggleCard(b.dataset.card));
