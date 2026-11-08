@@ -34,7 +34,7 @@ Cada celda puede tener dos jefes: el primero es el principal, el segundo (separa
 
 - Da loot en cada derrota, pero el **Cofre de Armas de Dienteleón** es raro (baja probabilidad). Normalmente hay que derrotarla muchas veces para que caiga.
 - **Auras latentes de Karanda**: vía garantizada. Al juntar **100 auras** obtienes el arma.
-- En el panel, el contador de Karanda cuenta auras (0 → 100) y **no se reinicia** con "Reiniciar semana" (las auras se acumulan entre semanas).
+- En el panel, Karanda es un simple marcador de "hecho" (no se cuenta cada aura). El renglón recuerda que el objetivo son las 100 auras para el Cofre Dienteleón.
 
 ## Jefes del calendario que NO están en el panel
 
