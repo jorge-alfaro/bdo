@@ -41,7 +41,7 @@ Un panel personal de Black Desert que reúne en una sola vista todo lo que el ju
 
 ## Brand Commitments
 
-- Nombre del juego y del panel: "Black Desert · Panel personal".
+- Nombre del juego y del panel: "Black Desert · BDN" (Bitácora del Navegante).
 - Retratos de jefes como identidad visual: imágenes `.webp` en `public/assets/` (garmoth, rawr-rawr, vell, karanda, quint). El panel ya usa estos retratos en lugar de emojis para los jefes.
 - Tono: personal y directo, en español de México.
 
