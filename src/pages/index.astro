@@ -17,15 +17,9 @@ import '../styles/global.css';
 <body>
 <div class="wrap">
 
-  <!-- HEADER · ship's bell + logbook plate -->
+  <!-- HEADER · logbook title -->
   <div class="top">
     <div class="logo"><b>Black Desert</b><span>Bitácora del navegante</span></div>
-    <div class="plate clock">
-      <div class="date" id="date"></div>
-      <div class="time" id="time">--:--:--</div>
-      <div class="resets"><div>Reset diario<b>6:00 PM</b></div><div>Reset semanal<b>Mié · 6:00 PM</b></div></div>
-      <div class="reset-stamp"><small>próximo reset</small><span id="weeklyTimer"></span></div>
-    </div>
   </div>
 
   <!-- NEXT BOSS · el retrato -->
@@ -53,6 +47,15 @@ import '../styles/global.css';
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- RELOJ · tira compacta de ancho completo -->
+  <div class="plate clock">
+    <div class="ck-date" id="date">--</div>
+    <div class="ck-time" id="time">--:--:--</div>
+    <div class="ck-reset"><small>Reset diario</small><b>6:00 PM</b></div>
+    <div class="ck-reset"><small>Reset semanal</small><b>Mié · 6:00 PM</b></div>
+    <div class="ck-count"><span id="weeklyTimer">—</span></div>
   </div>
 
   <!-- NOTAS · un solo desplegable con Semanal + Notas -->
@@ -195,8 +198,8 @@ let curKey="";
 function tick(){
   const now=new Date();
   $("time").textContent=pad(now.getHours())+":"+pad(now.getMinutes())+":"+pad(now.getSeconds());
-  let d=now.toLocaleDateString("es-MX",{weekday:"short",day:"numeric",month:"long",year:"numeric"});
-  $("date").textContent=d.charAt(0).toUpperCase()+d.slice(1);
+  let d=now.toLocaleDateString("es-MX",{weekday:"short"});
+  $("date").textContent=d.replace(/\./g,"").toUpperCase();
   $("weeklyTimer").textContent=weeklyTimer();
   const l=occ(),g1=group(l,0),g2=g1?group(l,g1.end):null;
   if(g1){$("nCd").textContent=fmt(g1.at-now);const k=+g1.at+"|"+(g2?+g2.at:0);if(k!==curKey){curKey=k;paint(g1,"nName","nCd","nAt",true);paint(g2,"fName","fCd","fAt",false);renderSched(g1.at)}}

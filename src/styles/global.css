@@ -76,10 +76,7 @@ input,textarea{caret-color:var(--brass-bright)}
    Header — the ship's bell and logbook plate
    ========================================================================== */
 .top{
-  display:grid;
-  grid-template-columns:1fr minmax(280px,340px);
-  gap:18px;
-  align-items:stretch;
+  display:block;
 }
 .logo{
   display:flex;flex-direction:column;justify-content:center;
@@ -113,47 +110,69 @@ input,textarea{caret-color:var(--brass-bright)}
   box-shadow:0 1px 0 rgba(255,255,255,.5) inset, 0 10px 24px -16px rgba(0,0,0,.55);
   padding:16px;
 }
-.clock{text-align:center}
-.clock .date{
-  font-size:.82rem;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  color:var(--ink-dim);
-  margin-bottom:2px;
+/* clock — compact full-width strip */
+.clock{
+  display:flex;
+  align-items:stretch;
+  padding:0;
+  overflow:hidden;
 }
-.clock .time{
+.ck-date,.ck-time,.ck-reset,.ck-count{display:flex;align-items:center}
+.ck-date{
+  padding:0 16px;
+  font-family:"Cinzel",Georgia,serif;
+  font-weight:700;
+  font-size:1.05rem;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--brass-ink);
+  border-right:1px solid var(--line-paper);
+}
+.ck-time{
+  padding:0 18px;
   font-family:"Barlow",monospace;
   font-variant-numeric:tabular-nums;
   font-weight:600;
-  font-size:2.9rem;
+  font-size:2rem;
   line-height:1;
-  letter-spacing:.01em;
-  margin:2px 0 6px;
+  color:var(--ink);
+  border-right:1px solid var(--line-paper);
 }
-.resets{
-  display:flex;justify-content:space-around;
-  border-top:1px solid var(--line-paper);
-  padding-top:9px;
-  font-size:.8rem;
+.ck-reset{
+  flex-direction:column;
+  justify-content:center;
+  align-items:flex-start;
+  gap:2px;
+  padding:0 16px;
+  border-right:1px solid var(--line-paper);
+}
+.ck-reset small{
+  font-size:.62rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
   color:var(--ink-dim);
-  gap:8px;
 }
-.resets b{display:block;color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
-
-/* weekly reset countdown — brass stamp */
-.reset-stamp{
-  margin-top:10px;
-  padding:7px 10px;
-  border:1px solid var(--line-brass);
-  border-radius:6px;
-  font-variant-numeric:tabular-nums;
+.ck-reset b{
+  font-size:.95rem;
   font-weight:600;
-  font-size:1.02rem;
-  letter-spacing:.02em;
-  color:var(--brass);
-  background:rgba(198,145,46,.08);
+  color:var(--ink);
+  font-variant-numeric:tabular-nums;
 }
-.reset-stamp small{display:block;font-size:.68rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-dim)}
+.ck-count{
+  margin-left:auto;
+  padding:10px 22px;
+  background:rgba(198,145,46,.10);
+  border-left:1px solid var(--line-brass);
+}
+.ck-count span{
+  font-family:"Barlow",monospace;
+  font-variant-numeric:tabular-nums;
+  font-weight:800;
+  font-size:clamp(1.7rem,3.4vw,2.4rem);
+  line-height:1;
+  letter-spacing:.02em;
+  color:var(--brass-ink);
+}
 
 /* ==========================================================================
    Next Boss — the compass. The signature move.
@@ -409,6 +428,8 @@ tr.nx td{background:rgba(198,145,46,.10)}
   .portrait{margin:0 auto}
   .slot{text-align:center}
   .fby{justify-content:center}
+  .clock{flex-wrap:wrap}
+  .ck-count{width:100%;justify-content:center;margin-left:0;border-left:none;border-top:1px solid var(--line-brass)}
   .bosses{grid-template-columns:repeat(3,1fr);gap:6px}
 }
 
