@@ -429,6 +429,7 @@ tr.nx td{background:rgba(198,145,46,.10)}
   .slot{text-align:center}
   .fby{justify-content:center}
   .clock{flex-wrap:wrap}
+  .ck-date,.ck-time{display:none}
   .ck-count{width:100%;justify-content:center;margin-left:0;border-left:none;border-top:1px solid var(--line-brass)}
   .bosses{grid-template-columns:repeat(3,1fr);gap:6px}
 }
