@@ -430,7 +430,10 @@ tr.nx td{background:rgba(198,145,46,.10)}
   .fby{justify-content:center}
   .clock{flex-wrap:wrap}
   .ck-date,.ck-time{display:none}
-  .ck-count{width:100%;justify-content:center;margin-left:0;border-left:none;border-top:1px solid var(--line-brass)}
+  .ck-reset{padding:0 10px}
+  .ck-reset small{font-size:.56rem;letter-spacing:.08em}
+  .ck-count{padding:8px 12px}
+  .ck-count span{font-size:clamp(1.5rem,6.5vw,2rem)}
   .bosses{grid-template-columns:repeat(3,1fr);gap:6px}
 }
 
